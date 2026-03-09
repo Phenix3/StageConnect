@@ -89,10 +89,27 @@ export default function Register() {
                                 />
                             </div>
 
+                            <div className="grid gap-2">
+                                <Label htmlFor="role">I am a</Label>
+                                <select
+                                    id="role"
+                                    name="role"
+                                    required
+                                    tabIndex={5}
+                                    className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+                                    defaultValue=""
+                                >
+                                    <option value="" disabled>Select your role...</option>
+                                    <option value="student">Student</option>
+                                    <option value="company">Company</option>
+                                </select>
+                                <InputError message={errors.role} />
+                            </div>
+
                             <Button
                                 type="submit"
                                 className="mt-2 w-full"
-                                tabIndex={5}
+                                tabIndex={6}
                                 data-test="register-user-button"
                             >
                                 {processing && <Spinner />}
@@ -102,7 +119,7 @@ export default function Register() {
 
                         <div className="text-center text-sm text-muted-foreground">
                             Already have an account?{' '}
-                            <TextLink href={login()} tabIndex={6}>
+                            <TextLink href={login()} tabIndex={7}>
                                 Log in
                             </TextLink>
                         </div>

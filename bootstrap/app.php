@@ -21,6 +21,12 @@ return Application::configure(basePath: dirname(__DIR__))
             HandleInertiaRequests::class,
             AddLinkHeadersForPreloadedAssets::class,
         ]);
+
+        $middleware->alias([
+            'role' => \App\Http\Middleware\EnsureRole::class,
+            'profile.complete' => \App\Http\Middleware\EnsureProfileComplete::class,
+            'subscription.plan' => \App\Http\Middleware\CheckSubscriptionPlan::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //
