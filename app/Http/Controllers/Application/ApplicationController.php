@@ -14,6 +14,30 @@ use Inertia\Response;
 
 class ApplicationController extends Controller
 {
+    public function show(Application $application, Request $request): Response
+    {
+        $user = $request->user();
+        $isStudent = $user->isStudent() && $user->studentProfile?->id === $application->student_id;
+        $isCompany = $user->isCompany() && $user->companyProfile?->id === $application->offer->company_id;
+
+        if (! $isStudent && ! $isCompany) {
+            abort(403);
+        }
+
+        // Mark as viewed if company is viewing
+        if ($isCompany && $application->status === 'pending') {
+            $application->update(['status' => 'viewed']);
+        }
+
+        $canReview = $application->status === 'accepted'
+            && ! $application->reviews()->where('reviewer_id', $user->id)->exists();
+
+        return Inertia::render('applications/show', [
+            'application' => $application->load(['offer.company', 'student.user']),
+            'canReview' => $canReview,
+        ]);
+    }
+
     public function store(StoreApplicationRequest $request, Offer $offer)
     {
         $student = $request->user()->studentProfile;

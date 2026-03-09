@@ -41,7 +41,7 @@ export default function StudentApplications({ applications }: Props) {
                         {applications.data.map((app) => (
                             <div key={app.id} className="rounded-xl border p-4 flex items-start justify-between">
                                 <div>
-                                    <Link href={`/offers/${app.offer.id}`} className="font-semibold hover:underline">{app.offer.title}</Link>
+                                    <Link href={`/applications/${app.id}`} className="font-semibold hover:underline">{app.offer.title}</Link>
                                     <p className="text-sm text-muted-foreground">{app.offer.company.name}</p>
                                     <p className="text-xs text-muted-foreground mt-1">Applied {new Date(app.applied_at).toLocaleDateString()}</p>
                                 </div>

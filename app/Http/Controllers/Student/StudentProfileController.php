@@ -11,6 +11,33 @@ use Inertia\Response;
 
 class StudentProfileController extends Controller
 {
+    public function downloadCv(int $id, Request $request)
+    {
+        $profile = \App\Models\StudentProfile::findOrFail($id);
+        $user = $request->user();
+
+        // Only the student themselves or a company can download
+        $isOwner = $user->isStudent() && $user->studentProfile?->id === $profile->id;
+        $isCompany = $user->isCompany();
+
+        if (! $isOwner && ! $isCompany) {
+            abort(403);
+        }
+
+        if (! $profile->cv_path || ! Storage::disk('local')->exists($profile->cv_path)) {
+            abort(404, 'CV not found.');
+        }
+
+        return Storage::disk('local')->download($profile->cv_path, 'cv.pdf');
+    }
+
+    public function show(int $id): Response
+    {
+        $profile = \App\Models\StudentProfile::with(['user', 'skills'])->findOrFail($id);
+
+        return Inertia::render('student/profile', ['student' => $profile]);
+    }
+
     public function edit(Request $request): Response
     {
         $profile = $request->user()->studentProfile;

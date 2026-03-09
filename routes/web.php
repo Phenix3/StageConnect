@@ -28,9 +28,10 @@ Route::get('offers/recommended', [MatchingController::class, 'recommended'])
     ->name('offers.recommended');
 Route::get('offers/{offer}', [OfferController::class, 'show'])->name('offers.show');
 Route::get('companies/{id}', [CompanyProfileController::class, 'show'])->name('company.profile.show');
+Route::get('students/{id}', [StudentProfileController::class, 'show'])->name('student.profile.show');
 
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::inertia('dashboard', 'dashboard')->name('dashboard');
+    Route::inertia('dashboard', 'dashboard')->name('dashboard')->middleware('profile.complete');
 
     // Student routes
     Route::middleware('role:student')->prefix('student')->name('student.')->group(function () {
@@ -78,6 +79,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::patch('applications/{application}/accept', [ApplicationController::class, 'accept'])->name('applications.accept');
         Route::patch('applications/{application}/reject', [ApplicationController::class, 'reject'])->name('applications.reject');
     });
+
+    // CV download (auth required)
+    Route::get('students/{id}/cv', [StudentProfileController::class, 'downloadCv'])->name('student.cv.download');
+
+    // Application detail (student or company)
+    Route::get('applications/{application}', [ApplicationController::class, 'show'])->name('applications.show');
 
     // Messages (any auth user)
     Route::get('applications/{application}/messages', [MessageController::class, 'index'])->name('messages.index');

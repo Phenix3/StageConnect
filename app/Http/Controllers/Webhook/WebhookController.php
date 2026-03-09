@@ -29,14 +29,21 @@ class WebhookController extends Controller
         $sigHeader = $request->header('Stripe-Signature');
         $secret = config('services.stripe.webhook_secret');
 
-        if ($secret && $sigHeader) {
-            try {
-                $event = \Stripe\Webhook::constructEvent($payload, $sigHeader, $secret);
-                $this->subscriptionService->handleStripeWebhook($event->toArray());
-            } catch (\Stripe\Exception\SignatureVerificationException $e) {
-                return response('Signature verification failed', 400);
-            }
+        if (! $secret) {
+            \Illuminate\Support\Facades\Log::warning('Stripe webhook called but no webhook secret configured.');
+
+            return response('Webhook secret not configured.', 400);
         }
+
+        try {
+            $event = \Stripe\Webhook::constructEvent($payload, $sigHeader, $secret);
+        } catch (\Stripe\Exception\SignatureVerificationException $e) {
+            return response('Signature verification failed.', 400);
+        } catch (\UnexpectedValueException $e) {
+            return response('Invalid payload.', 400);
+        }
+
+        $this->subscriptionService->handleStripeWebhook($event->toArray());
 
         return response('OK', 200);
     }

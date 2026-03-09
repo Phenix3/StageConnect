@@ -6,7 +6,8 @@
       "Bash(php:*)",
       "Bash(composer lint:check:*)",
       "Bash(composer lint:*)",
-      "Bash(composer require:*)"
+      "Bash(composer require:*)",
+      "Bash(grep:*)"
     ]
   }
 }

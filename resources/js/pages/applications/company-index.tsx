@@ -42,9 +42,9 @@ export default function CompanyApplications({ applications }: Props) {
                             <div key={app.id} className="rounded-xl border p-4">
                                 <div className="flex items-start justify-between mb-2">
                                     <div>
-                                        <p className="font-semibold">{app.student.user.name}</p>
+                                        <Link href={`/applications/${app.id}`} className="font-semibold hover:underline">{app.student.user.name}</Link>
                                         <p className="text-sm text-muted-foreground">
-                                            For: <Link href={`/offers/${app.offer.id}`} className="hover:underline">{app.offer.title}</Link>
+                                            For: <Link href={`/applications/${app.id}`} className="hover:underline">{app.offer.title}</Link>
                                         </p>
                                         <div className="flex gap-3 text-xs text-muted-foreground mt-1">
                                             {app.student.level && <span>{app.student.level.toUpperCase()}</span>}

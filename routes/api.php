@@ -11,10 +11,12 @@ use App\Http\Controllers\Api\V1\Review\ReviewController;
 use App\Http\Controllers\Api\V1\Skill\SkillController;
 use Illuminate\Support\Facades\Route;
 
-Route::prefix('v1')->name('api.v1.')->group(function () {
-    // Auth (public)
-    Route::post('auth/register', [AuthController::class, 'register'])->name('auth.register');
-    Route::post('auth/login', [AuthController::class, 'login'])->name('auth.login');
+Route::prefix('v1')->name('api.v1.')->middleware('throttle:api')->group(function () {
+    // Auth (public) — stricter rate limit
+    Route::middleware('throttle:api-auth')->group(function () {
+        Route::post('auth/register', [AuthController::class, 'register'])->name('auth.register');
+        Route::post('auth/login', [AuthController::class, 'login'])->name('auth.login');
+    });
 
     // Public routes
     Route::get('offers', [OfferController::class, 'index'])->name('offers.index');
