@@ -66,6 +66,10 @@ class ApplicationController extends Controller
 
         return Inertia::render('applications/student-index', [
             'applications' => Application::with(['offer.company'])
+                ->withCount(['messages as unread_count' => function ($query) {
+                    $query->whereNull('read_at')
+                          ->where('sender_id', '!=', auth()->id());
+                }])
                 ->where('student_id', $student->id)
                 ->orderByDesc('applied_at')
                 ->paginate(15),
@@ -78,6 +82,10 @@ class ApplicationController extends Controller
 
         return Inertia::render('applications/company-index', [
             'applications' => Application::with(['offer', 'student.user'])
+                ->withCount(['messages as unread_count' => function ($query) {
+                    $query->whereNull('read_at')
+                          ->where('sender_id', '!=', auth()->id());
+                }])
                 ->whereHas('offer', fn ($q) => $q->where('company_id', $company->id))
                 ->orderByDesc('applied_at')
                 ->paginate(15),

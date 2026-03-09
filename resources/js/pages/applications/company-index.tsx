@@ -11,6 +11,7 @@ interface Application {
     matching_score?: number;
     applied_at: string;
     cover_letter?: string;
+    unread_count?: number;
     offer: Offer;
     student: Student;
 }
@@ -57,6 +58,11 @@ export default function CompanyApplications({ applications }: Props) {
                                             <span className="text-sm font-medium text-primary">{Number(app.matching_score).toFixed(0)}%</span>
                                         )}
                                         <span className={`text-xs px-2 py-0.5 rounded-full ${statusColors[app.status] ?? ''}`}>{app.status}</span>
+                                        {(app.unread_count ?? 0) > 0 && (
+                                            <span className="text-xs bg-primary text-primary-foreground px-2 py-0.5 rounded-full">
+                                                {app.unread_count} new
+                                            </span>
+                                        )}
                                     </div>
                                 </div>
                                 {app.cover_letter && (

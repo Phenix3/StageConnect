@@ -26,9 +26,10 @@ interface Offer {
 interface Props {
     offer: Offer;
     auth: { user?: { role: string } };
+    alreadyApplied: boolean;
 }
 
-export default function OfferShow({ offer, auth }: Props) {
+export default function OfferShow({ offer, auth, alreadyApplied }: Props) {
     const breadcrumbs: BreadcrumbItem[] = [
         { title: 'Offers', href: '/offers' },
         { title: offer.title, href: `/offers/${offer.id}` },
@@ -97,23 +98,29 @@ export default function OfferShow({ offer, auth }: Props) {
 
                 {/* Apply form */}
                 {auth.user?.role === 'student' && (
-                    <form onSubmit={apply} className="border rounded-xl p-4 flex flex-col gap-4">
-                        <h2 className="font-semibold">Apply to this offer</h2>
-                        <div className="grid gap-2">
-                            <Label htmlFor="cover_letter">Cover Letter (optional)</Label>
-                            <Textarea
-                                id="cover_letter"
-                                value={data.cover_letter}
-                                onChange={(e) => setData('cover_letter', e.target.value)}
-                                placeholder="Introduce yourself and explain why you're interested..."
-                                rows={5}
-                            />
-                            <InputError message={errors.cover_letter} />
+                    alreadyApplied ? (
+                        <div className="border rounded-xl p-4 bg-muted/50">
+                            <p className="text-sm font-medium text-muted-foreground">✓ You have already applied to this offer.</p>
                         </div>
-                        <Button type="submit" disabled={processing} className="w-fit">
-                            Submit Application
-                        </Button>
-                    </form>
+                    ) : (
+                        <form onSubmit={apply} className="border rounded-xl p-4 flex flex-col gap-4">
+                            <h2 className="font-semibold">Apply to this offer</h2>
+                            <div className="grid gap-2">
+                                <Label htmlFor="cover_letter">Cover Letter (optional)</Label>
+                                <Textarea
+                                    id="cover_letter"
+                                    value={data.cover_letter}
+                                    onChange={(e) => setData('cover_letter', e.target.value)}
+                                    placeholder="Introduce yourself and explain why you're interested..."
+                                    rows={5}
+                                />
+                                <InputError message={errors.cover_letter} />
+                            </div>
+                            <Button type="submit" disabled={processing} className="w-fit">
+                                Submit Application
+                            </Button>
+                        </form>
+                    )
                 )}
             </div>
         </AppLayout>

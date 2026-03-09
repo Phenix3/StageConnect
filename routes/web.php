@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Application\ApplicationController;
 use App\Http\Controllers\Company\CompanyProfileController;
 use App\Http\Controllers\Matching\MatchingController;
@@ -59,7 +60,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::middleware('role:company')->group(function () {
         Route::get('offers/create', [OfferController::class, 'create'])->name('offers.create');
         Route::post('offers', [OfferController::class, 'store'])
-            ->middleware('subscription.plan')
+            ->middleware(['subscription.plan', 'profile.complete'])
             ->name('offers.store');
         Route::get('offers/{offer}/edit', [OfferController::class, 'edit'])->name('offers.edit');
         Route::put('offers/{offer}', [OfferController::class, 'update'])->name('offers.update');
@@ -70,7 +71,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     // Applications (student only)
     Route::middleware('role:student')->group(function () {
-        Route::post('offers/{offer}/apply', [ApplicationController::class, 'store'])->name('applications.store');
+        Route::post('offers/{offer}/apply', [ApplicationController::class, 'store'])
+            ->middleware('profile.complete')
+            ->name('applications.store');
         Route::patch('applications/{application}/withdraw', [ApplicationController::class, 'withdraw'])->name('applications.withdraw');
     });
 
@@ -94,6 +97,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Reviews (any auth user)
     Route::get('applications/{application}/review', [ReviewController::class, 'createForm'])->name('reviews.create');
     Route::post('applications/{application}/review', [ReviewController::class, 'store'])->name('reviews.store');
+
+    // Admin routes
+    Route::middleware('role:admin')->prefix('admin')->name('admin.')->group(function () {
+        Route::get('dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
+        Route::get('users', [AdminController::class, 'users'])->name('users');
+        Route::get('companies', [AdminController::class, 'companies'])->name('companies');
+        Route::patch('companies/{company}/verify', [AdminController::class, 'verifyCompany'])->name('companies.verify');
+    });
 });
 
 require __DIR__.'/settings.php';

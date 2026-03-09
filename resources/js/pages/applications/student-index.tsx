@@ -9,6 +9,7 @@ interface Application {
     status: string;
     matching_score?: number;
     applied_at: string;
+    unread_count?: number;
     offer: Offer;
 }
 interface Paginator<T> { data: T[]; current_page: number; last_page: number; next_page_url?: string; prev_page_url?: string; }
@@ -50,6 +51,11 @@ export default function StudentApplications({ applications }: Props) {
                                         <span className="text-sm font-medium text-primary">{Number(app.matching_score).toFixed(0)}% match</span>
                                     )}
                                     <span className={`text-xs px-2 py-0.5 rounded-full ${statusColors[app.status] ?? ''}`}>{app.status}</span>
+                                    {(app.unread_count ?? 0) > 0 && (
+                                        <span className="text-xs bg-primary text-primary-foreground px-2 py-0.5 rounded-full">
+                                            {app.unread_count} new
+                                        </span>
+                                    )}
                                     {app.status === 'pending' || app.status === 'viewed' ? (
                                         <Button variant="outline" size="sm"
                                             onClick={() => { if (confirm('Withdraw this application?')) router.patch(`/applications/${app.id}/withdraw`); }}>

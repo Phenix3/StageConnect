@@ -1,4 +1,4 @@
-import { Head, useForm } from '@inertiajs/react';
+import { Head, Link, useForm } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
@@ -36,6 +36,9 @@ export default function MessageThread({ application, messages, auth }: Props) {
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title={`Messages — ${application.offer.title}`} />
             <div className="flex h-full flex-1 flex-col gap-4 p-4 max-w-2xl">
+                <Link href={`/applications/${application.id}`} className="text-sm text-muted-foreground hover:text-foreground flex items-center gap-1 mb-4">
+                    ← Back to application
+                </Link>
                 <div>
                     <h1 className="text-xl font-semibold">{application.offer.title}</h1>
                     <p className="text-sm text-muted-foreground">{application.offer.company.name} · {application.student.user.name}</p>

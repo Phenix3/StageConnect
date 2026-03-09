@@ -46,18 +46,24 @@ export default function Dashboard() {
                             <p className="text-sm text-muted-foreground mb-4">
                                 Explore internship offers from companies.
                             </p>
-                            <span className="inline-flex items-center rounded-md border px-3 py-2 text-sm text-muted-foreground">
-                                Coming soon
-                            </span>
+                            <Link
+                                href="/offers"
+                                className="inline-flex items-center rounded-md bg-primary px-3 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90 transition-colors"
+                            >
+                                Browse Offers
+                            </Link>
                         </div>
                         <div className="rounded-xl border border-sidebar-border/70 dark:border-sidebar-border p-6">
                             <h2 className="font-semibold mb-2">My Applications</h2>
                             <p className="text-sm text-muted-foreground mb-4">
                                 Track the status of your applications.
                             </p>
-                            <span className="inline-flex items-center rounded-md border px-3 py-2 text-sm text-muted-foreground">
-                                Coming soon
-                            </span>
+                            <Link
+                                href="/student/applications"
+                                className="inline-flex items-center rounded-md bg-primary px-3 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90 transition-colors"
+                            >
+                                View Applications
+                            </Link>
                         </div>
                     </div>
                 )}
@@ -81,18 +87,24 @@ export default function Dashboard() {
                             <p className="text-sm text-muted-foreground mb-4">
                                 Create internship offers to find the right candidates.
                             </p>
-                            <span className="inline-flex items-center rounded-md border px-3 py-2 text-sm text-muted-foreground">
-                                Coming soon
-                            </span>
+                            <Link
+                                href="/offers/create"
+                                className="inline-flex items-center rounded-md bg-primary px-3 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90 transition-colors"
+                            >
+                                Post an Offer
+                            </Link>
                         </div>
                         <div className="rounded-xl border border-sidebar-border/70 dark:border-sidebar-border p-6">
                             <h2 className="font-semibold mb-2">Applications</h2>
                             <p className="text-sm text-muted-foreground mb-4">
                                 Review applications from students.
                             </p>
-                            <span className="inline-flex items-center rounded-md border px-3 py-2 text-sm text-muted-foreground">
-                                Coming soon
-                            </span>
+                            <Link
+                                href="/company/applications"
+                                className="inline-flex items-center rounded-md bg-primary px-3 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90 transition-colors"
+                            >
+                                View Applications
+                            </Link>
                         </div>
                     </div>
                 )}

@@ -50,8 +50,10 @@ function useNavItems(): NavItem[] {
 
     if (role === 'admin') {
         return [
-            { title: 'Dashboard', href: '/dashboard', icon: LayoutGrid },
+            { title: 'Dashboard', href: '/admin/dashboard', icon: LayoutGrid },
             { title: 'All Offers', href: '/offers', icon: Briefcase },
+            { title: 'Users', href: '/admin/users', icon: Users },
+            { title: 'Companies', href: '/admin/companies', icon: Building2 },
         ];
     }
 
@@ -63,6 +65,7 @@ function useNavItems(): NavItem[] {
 
 export function AppSidebar() {
     const navItems = useNavItems();
+    const { auth } = usePage<{ auth: { user?: { role?: string } } }>().props;
 
     return (
         <Sidebar collapsible="icon" variant="inset">
@@ -83,7 +86,7 @@ export function AppSidebar() {
             </SidebarContent>
 
             <SidebarFooter>
-                <NavUser />
+                {auth?.user && <NavUser />}
             </SidebarFooter>
         </Sidebar>
     );

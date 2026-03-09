@@ -47,8 +47,20 @@ class OfferController extends Controller
     {
         $offer->load(['company', 'skills', 'applications']);
 
+        $alreadyApplied = false;
+        if (auth()->check() && auth()->user()->isStudent()) {
+            $student = auth()->user()->studentProfile;
+            if ($student) {
+                $alreadyApplied = $offer->applications()
+                    ->where('student_id', $student->id)
+                    ->whereNotIn('status', ['withdrawn'])
+                    ->exists();
+            }
+        }
+
         return Inertia::render('offers/show', [
             'offer' => $offer,
+            'alreadyApplied' => $alreadyApplied,
         ]);
     }
 
