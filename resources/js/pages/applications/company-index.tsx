@@ -1,8 +1,8 @@
 import { Head, Link, router } from '@inertiajs/react';
 import { ClipboardList, MessageSquare, Users } from 'lucide-react';
-import AppLayout from '@/layouts/app-layout';
 import { Button } from '@/components/ui/button';
-import { type BreadcrumbItem } from '@/types';
+import AppLayout from '@/layouts/app-layout';
+import type {BreadcrumbItem} from '@/types';
 
 interface Student { user: { name: string }; city?: string; level?: string; }
 interface Offer { id: number; title: string; }

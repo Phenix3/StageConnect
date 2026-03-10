@@ -1,5 +1,6 @@
 import { Head, Link, usePage } from '@inertiajs/react';
 import { ChevronDown, LayoutDashboard, LogOut, Settings, UserCircle } from 'lucide-react';
+import { FlashMessages } from '@/components/flash-messages';
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -10,7 +11,6 @@ import {
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { UserInfo } from '@/components/user-info';
-import { FlashMessages } from '@/components/flash-messages';
 import { dashboard, logout, register } from '@/routes';
 import { edit as editStudentProfile } from '@/routes/student/profile';
 import type { User } from '@/types';

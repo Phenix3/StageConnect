@@ -1,7 +1,7 @@
 import { Head, Link, router } from '@inertiajs/react';
-import AppLayout from '@/layouts/app-layout';
 import { Button } from '@/components/ui/button';
-import { type BreadcrumbItem } from '@/types';
+import AppLayout from '@/layouts/app-layout';
+import type {BreadcrumbItem} from '@/types';
 
 interface Skill { id: number; name: string; }
 interface Offer { id: number; title: string; type: string; status: string; city?: string; remote: boolean; created_at: string; skills: Skill[]; }

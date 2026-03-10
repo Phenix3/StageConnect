@@ -1,9 +1,9 @@
 import { Head, Link, useForm } from '@inertiajs/react';
-import AppLayout from '@/layouts/app-layout';
+import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
-import InputError from '@/components/input-error';
-import { type BreadcrumbItem } from '@/types';
+import AppLayout from '@/layouts/app-layout';
+import type {BreadcrumbItem} from '@/types';
 
 interface Sender { id: number; name: string; }
 interface Message { id: number; body: string; read_at?: string; created_at: string; sender: Sender; }

@@ -1,9 +1,9 @@
 import { Head, router } from '@inertiajs/react';
 import { Briefcase, Search, SlidersHorizontal, X } from 'lucide-react';
 import { useState } from 'react';
-import PublicLayout from '@/layouts/public-layout';
 import PublicOfferCard from '@/components/public-offer-card';
 import { Input } from '@/components/ui/input';
+import PublicLayout from '@/layouts/public-layout';
 
 interface Skill { id: number; name: string; slug: string; }
 interface Company { id: number; name: string; logo?: string; }

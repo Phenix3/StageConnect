@@ -1,6 +1,6 @@
 import { Head } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
-import { type BreadcrumbItem } from '@/types';
+import type {BreadcrumbItem} from '@/types';
 
 interface UserRow {
     id: number;

@@ -1,9 +1,9 @@
 import { Head, Link, useForm } from '@inertiajs/react';
 import { Calendar, Clock, GraduationCap, MapPin, Monitor } from 'lucide-react';
-import PublicLayout from '@/layouts/public-layout';
+import InputError from '@/components/input-error';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import InputError from '@/components/input-error';
+import PublicLayout from '@/layouts/public-layout';
 
 interface Skill { id: number; name: string; }
 interface Company { id: number; name: string; logo?: string; sector?: string; size?: string; }

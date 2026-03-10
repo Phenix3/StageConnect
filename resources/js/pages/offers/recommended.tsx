@@ -1,7 +1,7 @@
 import { Head, Link } from '@inertiajs/react';
 import { TrendingUp } from 'lucide-react';
-import PublicLayout from '@/layouts/public-layout';
 import PublicOfferCard from '@/components/public-offer-card';
+import PublicLayout from '@/layouts/public-layout';
 
 interface Skill { id: number; name: string; }
 interface Company { id: number; name: string; }

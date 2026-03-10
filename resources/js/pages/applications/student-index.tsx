@@ -1,8 +1,8 @@
 import { Head, Link, router } from '@inertiajs/react';
 import { Briefcase, FileText, MessageSquare } from 'lucide-react';
-import AppLayout from '@/layouts/app-layout';
 import { Button } from '@/components/ui/button';
-import { type BreadcrumbItem } from '@/types';
+import AppLayout from '@/layouts/app-layout';
+import type {BreadcrumbItem} from '@/types';
 
 interface Offer { id: number; title: string; company: { id: number; name: string }; }
 interface Application {

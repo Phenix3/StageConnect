@@ -1,8 +1,8 @@
 import { Head, useForm } from '@inertiajs/react';
-import PublicLayout from '@/layouts/public-layout';
+import InputError from '@/components/input-error';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import InputError from '@/components/input-error';
+import PublicLayout from '@/layouts/public-layout';
 
 interface Skill {
     id: number;
