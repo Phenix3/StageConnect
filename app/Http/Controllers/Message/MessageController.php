@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Message;
 use App\Http\Controllers\Controller;
 use App\Models\Application;
 use App\Models\Message;
+use App\Notifications\NewMessageReceived;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -50,10 +51,18 @@ class MessageController extends Controller
             'body' => ['required', 'string', 'max:2000'],
         ]);
 
-        $application->messages()->create([
+        $message = $application->messages()->create([
             'sender_id' => $user->id,
             'body' => $data['body'],
         ]);
+
+        // Notify the other party
+        $application->load('offer.company.user', 'student.user');
+        $recipient = $isStudent
+            ? $application->offer->company->user
+            : $application->student->user;
+
+        $recipient?->notify(new NewMessageReceived($message));
 
         return back();
     }

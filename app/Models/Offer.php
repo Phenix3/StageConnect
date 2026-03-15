@@ -16,7 +16,7 @@ class Offer extends Model
     protected $fillable = [
         'company_id', 'title', 'description', 'duration', 'city',
         'remote', 'type', 'level_required', 'languages', 'status',
-        'is_premium', 'expires_at',
+        'is_premium', 'expires_at', 'views_count',
     ];
 
     protected function casts(): array

@@ -24,9 +24,15 @@ class MatchingController extends Controller
 
         $student->loadMissing('skills');
         $recommendations = $this->matchingService->getRecommendedOffers($student, 20);
+        $savedOfferIds = $student->savedOffers()->pluck('offers.id')->all();
 
         return Inertia::render('offers/recommended', [
-            'offers' => $recommendations,
+            'offers' => $recommendations->map(fn ($item) => [
+                'offer' => $item['offer'],
+                'score' => $item['score'],
+                'scoreDetail' => $item['scoreDetail'],
+            ]),
+            'savedOfferIds' => $savedOfferIds,
         ]);
     }
 }

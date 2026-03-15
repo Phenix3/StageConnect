@@ -7,6 +7,7 @@ use App\Http\Requests\StoreApplicationRequest;
 use App\Mail\ApplicationStatusChanged;
 use App\Models\Application;
 use App\Models\Offer;
+use App\Notifications\ApplicationStatusChanged as ApplicationStatusChangedNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Inertia\Inertia;
@@ -68,7 +69,7 @@ class ApplicationController extends Controller
             'applications' => Application::with(['offer.company'])
                 ->withCount(['messages as unread_count' => function ($query) {
                     $query->whereNull('read_at')
-                          ->where('sender_id', '!=', auth()->id());
+                        ->where('sender_id', '!=', auth()->id());
                 }])
                 ->where('student_id', $student->id)
                 ->orderByDesc('applied_at')
@@ -84,7 +85,7 @@ class ApplicationController extends Controller
             'applications' => Application::with(['offer', 'student.user'])
                 ->withCount(['messages as unread_count' => function ($query) {
                     $query->whereNull('read_at')
-                          ->where('sender_id', '!=', auth()->id());
+                        ->where('sender_id', '!=', auth()->id());
                 }])
                 ->whereHas('offer', fn ($q) => $q->where('company_id', $company->id))
                 ->orderByDesc('applied_at')
@@ -102,6 +103,7 @@ class ApplicationController extends Controller
         if ($studentUser?->email) {
             Mail::to($studentUser->email)->send(new ApplicationStatusChanged($application));
         }
+        $studentUser?->notify(new ApplicationStatusChangedNotification($application));
 
         return back()->with('success', 'Application accepted.');
     }
@@ -116,6 +118,7 @@ class ApplicationController extends Controller
         if ($studentUser?->email) {
             Mail::to($studentUser->email)->send(new ApplicationStatusChanged($application));
         }
+        $studentUser?->notify(new ApplicationStatusChangedNotification($application));
 
         return back()->with('success', 'Application rejected.');
     }

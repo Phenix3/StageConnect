@@ -1,5 +1,7 @@
 import { Head, Link } from '@inertiajs/react';
 import { TrendingUp } from 'lucide-react';
+import BookmarkButton from '@/components/bookmark-button';
+import { type MatchDetail } from '@/components/matching-score-breakdown';
 import PublicOfferCard from '@/components/public-offer-card';
 import PublicLayout from '@/layouts/public-layout';
 
@@ -9,10 +11,10 @@ interface Offer {
     id: number; title: string; type: string; city?: string; remote: boolean;
     is_premium: boolean; company: Company; skills: Skill[];
 }
-interface RecommendedOffer { offer: Offer; score: number; }
-interface Props { offers: RecommendedOffer[]; }
+interface RecommendedOffer { offer: Offer; score: number; scoreDetail: MatchDetail; }
+interface Props { offers: RecommendedOffer[]; savedOfferIds: number[]; }
 
-export default function RecommendedOffers({ offers }: Props) {
+export default function RecommendedOffers({ offers, savedOfferIds = [] }: Props) {
     return (
         <PublicLayout title="Recommended for You" activeNav="recommended">
             <Head title="Recommended for You" />
@@ -117,12 +119,20 @@ export default function RecommendedOffers({ offers }: Props) {
                 </div>
             ) : (
                 <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-                    {offers.map(({ offer, score }) => (
+                    {offers.map(({ offer, score, scoreDetail }) => (
                         <PublicOfferCard
                             key={offer.id}
                             offer={offer}
                             matchScore={score}
+                            scoreDetail={scoreDetail}
                             href={`/offers/${offer.id}`}
+                            rightSlot={
+                                <BookmarkButton
+                                    offerId={offer.id}
+                                    initialSaved={savedOfferIds.includes(offer.id)}
+                                    size="sm"
+                                />
+                            }
                         />
                     ))}
                 </div>

@@ -4,6 +4,7 @@ namespace App\Jobs;
 
 use App\Mail\ApplicationReceived;
 use App\Models\Application;
+use App\Notifications\NewApplicationReceived;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 
@@ -24,6 +25,10 @@ class SendApplicationNotification implements ShouldQueue
         if ($companyUser?->email) {
             \Illuminate\Support\Facades\Mail::to($companyUser->email)
                 ->send(new ApplicationReceived($application));
+        }
+
+        if ($companyUser) {
+            $companyUser->notify(new NewApplicationReceived($application));
         }
     }
 }

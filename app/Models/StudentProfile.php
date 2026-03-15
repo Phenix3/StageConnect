@@ -40,4 +40,10 @@ class StudentProfile extends Model
     {
         return $this->hasMany(Application::class, 'student_id');
     }
+
+    public function savedOffers(): BelongsToMany
+    {
+        return $this->belongsToMany(Offer::class, 'saved_offers', 'student_id', 'offer_id')
+            ->withPivot('created_at');
+    }
 }

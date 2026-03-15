@@ -1,6 +1,8 @@
 import { Head, Link, useForm } from '@inertiajs/react';
 import { Calendar, Clock, GraduationCap, MapPin, Monitor } from 'lucide-react';
+import BookmarkButton from '@/components/bookmark-button';
 import InputError from '@/components/input-error';
+import MatchingScoreBreakdown, { type MatchDetail } from '@/components/matching-score-breakdown';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import PublicLayout from '@/layouts/public-layout';
@@ -26,6 +28,8 @@ interface Props {
     offer: Offer;
     auth: { user?: { role: string } };
     alreadyApplied: boolean;
+    isSaved: boolean;
+    matchDetail?: MatchDetail | null;
 }
 
 const TYPE_STYLES: Record<string, { background: string; color: string; border: string; label: string }> = {
@@ -76,7 +80,7 @@ const CARD: React.CSSProperties = {
     boxShadow: '0 4px 24px rgba(30,64,175,0.07)',
 };
 
-export default function OfferShow({ offer, auth, alreadyApplied }: Props) {
+export default function OfferShow({ offer, auth, alreadyApplied, isSaved, matchDetail }: Props) {
     const { data, setData, post, processing, errors } = useForm({ cover_letter: '' });
     const typeStyle = TYPE_STYLES[offer.type] ?? { label: offer.type, background: 'rgba(241,245,249,0.85)', color: '#475569', border: '1px solid rgba(203,213,225,0.5)' };
 
@@ -100,6 +104,7 @@ export default function OfferShow({ offer, auth, alreadyApplied }: Props) {
                             <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '1rem', flexWrap: 'wrap' }}>
                                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.875rem', minWidth: 0 }}>
                                     <CompanyAvatar name={offer.company.name} logo={offer.company.logo} />
+
                                     <div>
                                         <Link
                                             href={`/companies/${offer.company.id}`}
@@ -140,6 +145,9 @@ export default function OfferShow({ offer, auth, alreadyApplied }: Props) {
                                         </div>
                                     </div>
                                 </div>
+                                {auth.user?.role === 'student' && (
+                                    <BookmarkButton offerId={offer.id} initialSaved={isSaved} />
+                                )}
                             </div>
 
                             <h1
@@ -324,6 +332,11 @@ export default function OfferShow({ offer, auth, alreadyApplied }: Props) {
                                     </form>
                                 </div>
                             )
+                        )}
+
+                        {/* Matching score breakdown (for students) */}
+                        {auth.user?.role === 'student' && matchDetail && (
+                            <MatchingScoreBreakdown detail={matchDetail} />
                         )}
 
                         {/* Company manage (for company role) */}

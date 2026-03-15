@@ -1,6 +1,7 @@
-import { Head, router } from '@inertiajs/react';
+import { Head, router, usePage } from '@inertiajs/react';
 import { Briefcase, Search, SlidersHorizontal, X } from 'lucide-react';
 import { useState } from 'react';
+import BookmarkButton from '@/components/bookmark-button';
 import PublicOfferCard from '@/components/public-offer-card';
 import { Input } from '@/components/ui/input';
 import PublicLayout from '@/layouts/public-layout';
@@ -32,9 +33,11 @@ interface Props {
     offers: Paginator<Offer>;
     skills: Skill[];
     filters: Record<string, string | boolean | string[]>;
+    savedOfferIds: number[];
 }
 
-export default function OffersIndex({ offers, filters }: Props) {
+export default function OffersIndex({ offers, filters, savedOfferIds = [] }: Props) {
+    const { auth } = usePage().props as { auth: { user?: { role: string } } };
     const [search, setSearch] = useState({
         type: (filters.type as string) ?? '',
         city: (filters.city as string) ?? '',
@@ -263,6 +266,15 @@ export default function OffersIndex({ offers, filters }: Props) {
                             key={offer.id}
                             offer={offer}
                             href={`/offers/${offer.id}`}
+                            rightSlot={
+                                auth?.user?.role === 'student' ? (
+                                    <BookmarkButton
+                                        offerId={offer.id}
+                                        initialSaved={savedOfferIds.includes(offer.id)}
+                                        size="sm"
+                                    />
+                                ) : undefined
+                            }
                         />
                     ))}
                 </div>

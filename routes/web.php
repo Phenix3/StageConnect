@@ -2,11 +2,15 @@
 
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Application\ApplicationController;
+use App\Http\Controllers\Company\AnalyticsController;
 use App\Http\Controllers\Company\CompanyProfileController;
 use App\Http\Controllers\Matching\MatchingController;
 use App\Http\Controllers\Message\MessageController;
+use App\Http\Controllers\Notification\NotificationController;
 use App\Http\Controllers\Offer\OfferController;
 use App\Http\Controllers\Review\ReviewController;
+use App\Http\Controllers\Student\BookmarkController;
+use App\Http\Controllers\Student\StudentBookmarksController;
 use App\Http\Controllers\Student\StudentProfileController;
 use App\Http\Controllers\Subscription\SubscriptionController;
 use App\Http\Controllers\Webhook\WebhookController;
@@ -39,7 +43,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('profile/edit', [StudentProfileController::class, 'edit'])->name('profile.edit');
         Route::post('profile', [StudentProfileController::class, 'update'])->name('profile.update');
         Route::get('applications', [ApplicationController::class, 'studentIndex'])->name('applications');
+        Route::get('bookmarks', [StudentBookmarksController::class, 'index'])->name('bookmarks');
     });
+
+    // Bookmark toggle (student only)
+    Route::middleware('role:student')
+        ->post('offers/{offer}/bookmark', [BookmarkController::class, 'toggle'])
+        ->name('offers.bookmark');
 
     // Subscription routes (company only)
     Route::middleware('role:company')->prefix('subscription')->name('subscription.')->group(function () {
@@ -54,6 +64,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('profile', [CompanyProfileController::class, 'update'])->name('profile.update');
         Route::get('offers', [OfferController::class, 'companyOffers'])->name('offers');
         Route::get('applications', [ApplicationController::class, 'companyIndex'])->name('applications');
+        Route::get('analytics', [AnalyticsController::class, 'index'])->name('analytics');
     });
 
     // Offer management (company only)
@@ -97,6 +108,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Reviews (any auth user)
     Route::get('applications/{application}/review', [ReviewController::class, 'createForm'])->name('reviews.create');
     Route::post('applications/{application}/review', [ReviewController::class, 'store'])->name('reviews.store');
+
+    // Notification routes (any auth user)
+    Route::get('notifications', [NotificationController::class, 'index'])->name('notifications.index');
+    Route::patch('notifications/read-all', [NotificationController::class, 'markAllRead'])->name('notifications.mark-all-read');
+    Route::patch('notifications/{id}/read', [NotificationController::class, 'markRead'])->name('notifications.mark-read');
 
     // Admin routes
     Route::middleware('role:admin')->prefix('admin')->name('admin.')->group(function () {

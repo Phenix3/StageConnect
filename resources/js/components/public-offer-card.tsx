@@ -1,5 +1,6 @@
 import { Link } from '@inertiajs/react';
 import { MapPin, Monitor } from 'lucide-react';
+import { MatchScoreChips, type MatchDetail } from '@/components/matching-score-breakdown';
 
 interface PublicOfferCardProps {
     offer: {
@@ -15,7 +16,9 @@ interface PublicOfferCardProps {
         skills: { id: number; name: string }[];
     };
     matchScore?: number;
+    scoreDetail?: MatchDetail;
     href: string;
+    rightSlot?: React.ReactNode;
 }
 
 const TYPE_STYLES: Record<string, { background: string; color: string; border: string; label: string }> = {
@@ -83,7 +86,7 @@ function CompanyAvatar({ name, logo }: { name: string; logo?: string }) {
     );
 }
 
-export default function PublicOfferCard({ offer, matchScore, href }: PublicOfferCardProps) {
+export default function PublicOfferCard({ offer, matchScore, scoreDetail, href, rightSlot }: PublicOfferCardProps) {
     const typeStyle = TYPE_STYLES[offer.type] ?? {
         label: offer.type,
         background: 'rgba(241,245,249,0.85)',
@@ -133,6 +136,7 @@ export default function PublicOfferCard({ offer, matchScore, href }: PublicOffer
                     </span>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.375rem', flexShrink: 0 }}>
+                    {rightSlot}
                     {typeof matchScore === 'number' && (
                         <span
                             style={{
@@ -229,31 +233,34 @@ export default function PublicOfferCard({ offer, matchScore, href }: PublicOffer
             </div>
 
             {/* Skills */}
-            {offer.skills.length > 0 && (
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.375rem', marginTop: 'auto' }}>
-                    {offer.skills.slice(0, 4).map((s) => (
-                        <span
-                            key={s.id}
-                            style={{
-                                background: 'rgba(219,234,254,0.6)',
-                                color: '#1E40AF',
-                                border: '1px solid rgba(147,197,253,0.4)',
-                                borderRadius: '2rem',
-                                padding: '0.125rem 0.625rem',
-                                fontSize: '0.75rem',
-                                fontWeight: 500,
-                            }}
-                        >
-                            {s.name}
-                        </span>
-                    ))}
-                    {offer.skills.length > 4 && (
-                        <span style={{ fontSize: '0.75rem', color: '#64748B', alignSelf: 'center' }}>
-                            +{offer.skills.length - 4}
-                        </span>
-                    )}
-                </div>
-            )}
+            <div style={{ marginTop: 'auto' }}>
+                {offer.skills.length > 0 && (
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.375rem' }}>
+                        {offer.skills.slice(0, 4).map((s) => (
+                            <span
+                                key={s.id}
+                                style={{
+                                    background: 'rgba(219,234,254,0.6)',
+                                    color: '#1E40AF',
+                                    border: '1px solid rgba(147,197,253,0.4)',
+                                    borderRadius: '2rem',
+                                    padding: '0.125rem 0.625rem',
+                                    fontSize: '0.75rem',
+                                    fontWeight: 500,
+                                }}
+                            >
+                                {s.name}
+                            </span>
+                        ))}
+                        {offer.skills.length > 4 && (
+                            <span style={{ fontSize: '0.75rem', color: '#64748B', alignSelf: 'center' }}>
+                                +{offer.skills.length - 4}
+                            </span>
+                        )}
+                    </div>
+                )}
+                {scoreDetail && <MatchScoreChips detail={scoreDetail} />}
+            </div>
         </Link>
     );
 }

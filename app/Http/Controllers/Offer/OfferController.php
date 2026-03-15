@@ -6,12 +6,15 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreOfferRequest;
 use App\Models\Offer;
 use App\Models\Skill;
+use App\Services\MatchingService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 
 class OfferController extends Controller
 {
+    public function __construct(private readonly MatchingService $matchingService) {}
+
     public function index(Request $request): Response
     {
         $query = Offer::with(['company', 'skills'])
@@ -23,7 +26,7 @@ class OfferController extends Controller
             $query->where('type', $request->type);
         }
         if ($request->filled('city')) {
-            $query->where('city', 'like', '%' . $request->city . '%');
+            $query->where('city', 'like', '%'.$request->city.'%');
         }
         if ($request->boolean('remote')) {
             $query->where('remote', true);
@@ -36,10 +39,19 @@ class OfferController extends Controller
             $query->whereHas('skills', fn ($q) => $q->whereIn('skills.id', $skillIds));
         }
 
+        $savedOfferIds = [];
+        if (auth()->check() && auth()->user()->isStudent()) {
+            $student = auth()->user()->studentProfile;
+            if ($student) {
+                $savedOfferIds = $student->savedOffers()->pluck('offers.id')->all();
+            }
+        }
+
         return Inertia::render('offers/index', [
             'offers' => $query->paginate(15)->withQueryString(),
             'skills' => Skill::orderBy('name')->get(['id', 'name', 'slug']),
             'filters' => $request->only(['type', 'city', 'remote', 'level', 'skill_ids']),
+            'savedOfferIds' => $savedOfferIds,
         ]);
     }
 
@@ -47,7 +59,15 @@ class OfferController extends Controller
     {
         $offer->load(['company', 'skills', 'applications']);
 
+        // Increment view count for non-company viewers
+        if (! auth()->check() || ! auth()->user()->isCompany()) {
+            $offer->increment('views_count');
+        }
+
         $alreadyApplied = false;
+        $isSaved = false;
+        $matchDetail = null;
+
         if (auth()->check() && auth()->user()->isStudent()) {
             $student = auth()->user()->studentProfile;
             if ($student) {
@@ -55,12 +75,17 @@ class OfferController extends Controller
                     ->where('student_id', $student->id)
                     ->whereNotIn('status', ['withdrawn'])
                     ->exists();
+
+                $isSaved = $student->savedOffers()->where('offer_id', $offer->id)->exists();
+                $matchDetail = $this->matchingService->calculateScoreDetail($student, $offer);
             }
         }
 
         return Inertia::render('offers/show', [
             'offer' => $offer,
             'alreadyApplied' => $alreadyApplied,
+            'isSaved' => $isSaved,
+            'matchDetail' => $matchDetail,
         ]);
     }
 
